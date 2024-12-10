@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const axios = require("axios"); // Add this line to import axios if not already done
+const axios = require("axios");
 
 dotenv.config();
 
@@ -13,6 +13,7 @@ const PROVINCE_API_URL = "https://localbudgeting.actai.co/data/2567/pao-";
 app.use(cors());
 app.use(express.json());
 
+// Budget API endpoint
 app.get("/api/budget/:province", async (req, res) => {
   try {
     const provinceName = req.params.province;
@@ -29,9 +30,6 @@ app.get("/api/budget/:province", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 // MongoDB setup
 mongoose
   .connect(process.env.MONGO_URI)
@@ -60,7 +58,7 @@ const ElectionSchema = new mongoose.Schema({
 
 const Election = mongoose.model("Election", ElectionSchema, "elections");
 
-// Routes
+// Elections API endpoint
 app.get("/api/elections", async (req, res) => {
   try {
     const elections = await Election.find();
@@ -70,6 +68,7 @@ app.get("/api/elections", async (req, res) => {
   }
 });
 
+// Single province election API endpoint
 app.get("/api/elections/:province", async (req, res) => {
   try {
     const election = await Election.findOne({ province: req.params.province });
@@ -82,7 +81,7 @@ app.get("/api/elections/:province", async (req, res) => {
   }
 });
 
-// Start server
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
