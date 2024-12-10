@@ -1,0 +1,48 @@
+[
+  {
+    "province": "เลย",
+    "electionDate": "2024-03-31",
+    "candidates": [
+      {
+        "name": "ชัยธวัช เนียมศิริ",
+        "party": "Development Group",
+        "votes": 119334,
+        "percentage": 51.89
+      },
+      {
+        "name": "จีระศักดิ์ น้อยก่ำ",
+        "party": "อิสระ",
+        "votes": 99031,
+        "percentage": 43.06
+      },
+      {
+        "name": "นาวิน วังคีรี",
+        "party": "อิสระ",
+        "votes": 99031,
+        "percentage": 43.06
+      }
+    ],
+    "totalVotes": 229969,
+    "turnout": 51.15
+  },
+  {
+    "province": "Chiang Mai",
+    "electionDate": "2024-03-31",
+    "candidates": [
+      {
+        "name": "Thanathorn Wongchai",
+        "party": "Progressive Party",
+        "votes": 150000,
+        "percentage": 60.0
+      },
+      {
+        "name": "Somsak Jitlada",
+        "party": "Traditional Group",
+        "votes": 100000,
+        "percentage": 40.0
+      }
+    ],
+    "totalVotes": 250000,
+    "turnout": 65.0
+  }
+]
