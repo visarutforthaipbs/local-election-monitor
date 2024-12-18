@@ -1,33 +1,33 @@
-/* Full-screen container */
 .home-container-full {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full height */
-  width: 100%; /* Full width */
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #faf3e0; /* Matching background color */
+  height: 100vh;
 }
 
-/* Content to fill the height */
+.search-bar {
+  position: absolute; /* Position it on top */
+  top: 20px; /* Distance from the top */
+  right: 20px; /* Distance from the right */
+  width: 250px; /* Set a smaller width */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+.search-bar .react-select__control {
+  font-size: 14px; /* Reduce font size for better appearance */
+  min-height: 35px; /* Make it smaller in height */
+}
+
+.reactour__tooltip {
+  font-family: "Prompt", sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: #f4f3ef;
+  border-radius: 8px;
+  padding: 10px;
+}
+
 .home-content {
   display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-/* Ensure sidebar and map adjust their sizes */
-.mainsidebar {
-  flex: 1; /* Sidebar takes appropriate space */
-  max-width: 40%;
-  background-color: #f3e8d0;
-  overflow-y: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.map-container {
-  flex: 3; /* Map takes the remaining space */
-  height: 100%;
-  background-color: #1bb584;
+  flex: 1;
+  overflow: hidden;
 }

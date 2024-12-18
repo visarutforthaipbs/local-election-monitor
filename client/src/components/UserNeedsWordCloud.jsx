@@ -3,22 +3,23 @@ import WordCloud from "react-wordcloud";
 import axios from "axios";
 import "./UserNeedsWordCloud.css";
 
-const UserNeedsWordCloud = ({ province }) => {
+const UserNeedsWordCloud = ({ province = "" }) => {
   const [userInput, setUserInput] = useState("");
   const [userNeeds, setUserNeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user needs when the province changes
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     const fetchUserNeeds = async () => {
       if (!province) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5005/api/feedback/${encodeURIComponent(province)}`
+          `${baseURL}/feedback/${encodeURIComponent(province)}`
         );
         const fetchedNeeds = response.data.flatMap((entry) => entry.feedback);
-        setUserNeeds(fetchedNeeds); // Set existing feedback for the province
+        setUserNeeds(fetchedNeeds);
       } catch (err) {
         console.error("Failed to fetch user needs:", err.message);
       } finally {
@@ -29,33 +30,27 @@ const UserNeedsWordCloud = ({ province }) => {
     fetchUserNeeds();
   }, [province]);
 
-  // Handle adding user feedback
   const handleAddNeed = async (e) => {
     e.preventDefault();
     if (!province) {
       alert("Please select a province first.");
       return;
     }
-    if (userInput.trim()) {
-      try {
-        const feedbackData = {
-          province: province,
-          feedback: userInput.trim(),
-        };
+    if (userInput.trim().length < 3) {
+      alert("กรุณากรอกข้อมูลให้มากกว่า 3 ตัวอักษร");
+      return;
+    }
 
-        // Post to the server
-        await axios.post("http://localhost:5005/api/feedback", feedbackData);
-
-        // Update local state to reflect the new feedback
-        setUserNeeds((prevNeeds) => [...prevNeeds, userInput.trim()]);
-        setUserInput(""); // Reset the input field
-      } catch (err) {
-        console.error("Failed to submit feedback:", err.message);
-      }
+    try {
+      const feedbackData = { province, feedback: userInput.trim() };
+      await axios.post(`${baseURL}/feedback`, feedbackData);
+      setUserNeeds((prevNeeds) => [...prevNeeds, userInput.trim()]);
+      setUserInput("");
+    } catch (err) {
+      console.error("Failed to submit feedback:", err.message);
     }
   };
 
-  // Generate word cloud data
   const generateWordCloudData = () => {
     const frequencyMap = userNeeds.reduce((acc, word) => {
       acc[word] = (acc[word] || 0) + 1;
@@ -74,7 +69,6 @@ const UserNeedsWordCloud = ({ province }) => {
         <p>กำลังโหลดข้อมูล...</p>
       ) : (
         <>
-          {/* Input Section */}
           <div className="user-needs-section">
             <h4>💬 บอกสิ่งที่คุณอยากเห็นในจังหวัดนี้</h4>
             <form onSubmit={handleAddNeed} className="needs-form">
@@ -91,7 +85,6 @@ const UserNeedsWordCloud = ({ province }) => {
             </form>
           </div>
 
-          {/* Word Cloud Section */}
           {userNeeds.length > 0 ? (
             <div className="wordcloud-section">
               <h4>☁️ ความต้องการของประชาชน</h4>
@@ -99,8 +92,9 @@ const UserNeedsWordCloud = ({ province }) => {
                 words={generateWordCloudData()}
                 options={{
                   rotations: 0,
-                  fontSizes: [15, 40],
+                  fontSizes: [15, 50],
                   rotationAngles: [0, 0],
+                  enableTooltip: true,
                 }}
               />
             </div>

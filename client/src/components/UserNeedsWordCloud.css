@@ -62,3 +62,13 @@
   font-size: 0.9rem; /* Adjust font size */
   font-family: "IBM Plex Sans Thai", sans-serif;
 }
+
+@media (max-width: 768px) {
+  .needs-form {
+    flex-direction: column;
+  }
+
+  .needs-button {
+    width: 100%;
+  }
+}
