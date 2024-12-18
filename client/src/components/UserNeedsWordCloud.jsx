@@ -8,7 +8,8 @@ const UserNeedsWordCloud = ({ province = "" }) => {
   const [userNeeds, setUserNeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const baseURL = process.env.REACT_APP_API_BASE_URL;
+  const baseURL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5005/api";
 
   useEffect(() => {
     const fetchUserNeeds = async () => {
