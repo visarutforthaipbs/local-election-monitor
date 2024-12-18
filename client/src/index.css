@@ -3,7 +3,7 @@
 body {
   margin: 0;
   font-family: "IBM Plex Sans Thai", serif;
-  background: url("./background-2.svg"); /* Reference your SVG file */
+  background: url("/background-2.svg"); /* Reference your SVG file */
   background-size: 2500px 2500px; /* Adjust the scaling of the pattern */
   background-color: #f4f4f4; /* Fallback background color */
   color: #333;

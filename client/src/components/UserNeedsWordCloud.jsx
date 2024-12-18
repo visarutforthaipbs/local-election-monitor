@@ -103,6 +103,7 @@ const UserNeedsWordCloud = ({ province = "" }) => {
                   fontSizes: [15, 50],
                   rotationAngles: [0, 0],
                   enableTooltip: true,
+                  fontFamily: "IBM Plex Sans Thai, serif", // Add your font-family here
                 }}
               />
             </div>
