@@ -1,0 +1,55 @@
+.map-container {
+  width: 100vh; /* Full width of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  margin: 0;
+  padding: 0;
+  background-color: #f4f3ef;
+}
+
+.map-view {
+  width: 100%;
+  height: 100%;
+}
+
+/* Geography (provinces) styling */
+.geography {
+  outline: none; /* Remove default outlines */
+  transition: fill 0.3s ease; /* Smooth transition for fill color */
+}
+
+.geography:hover {
+  fill: #8c6a4a !important; /* Hover color */
+  cursor: pointer; /* Indicate interactivity */
+}
+
+.geography:active {
+  fill: #735639 !important; /* Clicked color */
+}
+
+.geography:focus {
+  outline: 2px solid #8c6a4a; /* Add focus outline for accessibility */
+}
+
+/* Province Labels (Optional styling for province text if added later) */
+.province-label {
+  font-family: "Prompt", sans-serif; /* Thai-friendly font */
+  font-size: 12px;
+  fill: #5a4e40;
+  text-anchor: middle;
+}
+
+/* Add responsiveness for smaller screens */
+@media (max-width: 768px) {
+  .map-container {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
+/* Optional dark mode styling */
+@media (prefers-color-scheme: dark) {
+  .map-container {
+    background-color: #333; /* Dark background */
+    color: #fff; /* Light text */
+  }
+}

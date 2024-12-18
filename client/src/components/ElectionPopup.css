@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@200;400;600;700&display=swap");
+
+:root {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
+.election-popup {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #1bb2b5;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  z-index: 1000;
+}
+
+/* Header */
+.election-header {
+  text-align: center;
+}
+
+.election-popup h2 {
+  font-size: 1.6rem;
+  color: whitesmoke;
+  margin-bottom: -1rem;
+}
+
+.election-popup .election-date {
+  font-style: italic;
+  color: whitesmoke;
+  margin-bottom: 1.5rem;
+}
+
+/* Winner Section */
+.winner-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #ede0d4;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.winner-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.winner-details .winner-name {
+  font-weight: bold;
+  color: #5a4e40;
+}
+
+.winner-details .winner-info {
+  font-size: 0.9rem;
+  color: #7d6756;
+}
+
+/* Results Section */
+.election-results h3,
+.other-candidates h3 {
+  font-size: 1.2rem;
+  color: whitesmoke;
+  margin-bottom: 0.5rem;
+}
+
+.election-results ul,
+.other-candidates ul {
+  padding-left: 1rem;
+}
+
+.election-results li,
+.candidates-list li {
+  margin-bottom: 0.5rem;
+  color: whitesmoke;
+}
+
+/* Candidates Section */
+.candidates-list {
+  list-style: none;
+  padding: 0;
+}
+
+.candidates-list li {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed #d3c0a6;
+}
+
+/* Close Button */
+.close-button {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #1bb584;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  box-shadow: 5px 5px 5px lightblue;
+}
+
+.close-button:hover {
+  background-color: #7d6756;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
