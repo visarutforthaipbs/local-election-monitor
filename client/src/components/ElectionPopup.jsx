@@ -1,6 +1,6 @@
 import React from "react";
 import "./ElectionPopup.css";
-import uncleImage from "../assets/images/uncle.jpg";
+import uncleImage from "/unCle.png";
 
 const ElectionPopup = ({ isVisible, onClose, electionData }) => {
   if (!isVisible || !electionData) return null;
