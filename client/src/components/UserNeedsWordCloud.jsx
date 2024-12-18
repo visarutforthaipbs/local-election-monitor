@@ -19,7 +19,8 @@ const UserNeedsWordCloud = ({ province = "" }) => {
         const response = await axios.get(
           `${baseURL}/feedback/${encodeURIComponent(province)}`
         );
-        const fetchedNeeds = response.data.flatMap((entry) => entry.feedback);
+        console.log("Fetched feedbacks:", response.data); // Debug fetched data
+        const fetchedNeeds = response.data.flatMap((entry) => entry);
         setUserNeeds(fetchedNeeds);
       } catch (err) {
         console.error("Failed to fetch user needs:", err.message);
@@ -45,7 +46,13 @@ const UserNeedsWordCloud = ({ province = "" }) => {
     try {
       const feedbackData = { province, feedback: userInput.trim() };
       await axios.post(`${baseURL}/feedback`, feedbackData);
-      setUserNeeds((prevNeeds) => [...prevNeeds, userInput.trim()]);
+
+      // Refetch updated feedbacks after posting
+      const response = await axios.get(
+        `${baseURL}/feedback/${encodeURIComponent(province)}`
+      );
+      const fetchedNeeds = response.data.flatMap((entry) => entry);
+      setUserNeeds(fetchedNeeds);
       setUserInput("");
     } catch (err) {
       console.error("Failed to submit feedback:", err.message);
