@@ -112,7 +112,8 @@ app.post("/api/feedback", async (req, res) => {
 app.get("/api/feedback/:province", async (req, res) => {
   try {
     const feedbacks = await Feedback.find({ province: req.params.province });
-    res.json(feedbacks);
+    const feedbackTexts = feedbacks.map((entry) => entry.feedback);
+    res.json(feedbackTexts);
   } catch (err) {
     console.error("Error fetching feedback:", err.message);
     res.status(500).json({ error: "Failed to fetch feedback" });
