@@ -61,7 +61,7 @@ const BudgetSidebar = ({ budgetData }) => {
       <div className="logo-container">
         <img src={logoGif} alt="Logo" className="sidebar-logo" />
       </div>
-      <h2 className="sidebar-subheading">จับตาเลือกตั้งท้องถิ่น 2566-2567</h2>
+      <h2 className="sidebar-subheading">จับตาเลือกนายกอบจ. 2567-2568</h2>
       <div className="separator"></div>
       {budgetData ? (
         <div className="card">
