@@ -47,10 +47,11 @@
 }
 
 .winner-image {
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 .winner-details .winner-name {
