@@ -1,55 +1,166 @@
+/* Map Container */
 .map-container {
-  width: 100vh; /* Full width of the viewport */
-  height: 100vh; /* Full height of the viewport */
-  margin: 0;
-  padding: 0;
-  background-color: #f4f3ef;
+  width: 100%;
+  height: 100vh; /* Full height for the map */
+  position: relative;
+  overflow: hidden;
 }
 
-.map-view {
-  width: 100%;
-  height: 100%;
+/* Tooltip Styles */
+.tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(27, 178, 181, 0.95); /* Transparent turquoise */
+  color: white;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  pointer-events: none; /* Prevent interference */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+/* Tooltip arrow pointer */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(27, 178, 181, 0.95) transparent transparent transparent;
 }
 
 /* Geography (provinces) styling */
 .geography {
-  outline: none; /* Remove default outlines */
-  transition: fill 0.3s ease; /* Smooth transition for fill color */
+  outline: none;
+  transition: all 0.3s ease; /* Smooth animations */
+  stroke: #ffffff; /* White border */
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke; /* Preserve stroke width */
+  border-radius: 6px; /* Slightly rounded edges for smoother shape */
 }
 
+/* Hover Effect */
 .geography:hover {
-  fill: #8c6a4a !important; /* Hover color */
-  cursor: pointer; /* Indicate interactivity */
+  fill: #8c6a4a !important; /* Highlight hover color */
+  cursor: pointer;
+
+  /* Popup shadow and scale */
+  transform: scale(0.2.1); /* Slightly enlarge */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Shadow effect */
+  z-index: 2; /* Ensure it appears on top */
+  filter: brightness(1.1); /* Slightly brighten the color */
 }
 
+/* Active (clicked) Effect */
 .geography:active {
-  fill: #735639 !important; /* Clicked color */
+  fill: #735639 !important;
+  transform: scale(0.5.05); /* Keep slightly larger when active */
 }
 
-.geography:focus {
-  outline: 2px solid #8c6a4a; /* Add focus outline for accessibility */
+/* Sidebar Responsiveness */
+.sidebar {
+  width: 28%; /* Slightly smaller width */
+  padding: 1.5rem;
+  background-color: #1bb2b5; /* Turquoise background */
+  color: #5a4e40; /* Text color */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 10px;
 }
 
-/* Province Labels (Optional styling for province text if added later) */
-.province-label {
-  font-family: "Prompt", sans-serif; /* Thai-friendly font */
-  font-size: 12px;
-  fill: #5a4e40;
-  text-anchor: middle;
+/* Sidebar Heading */
+.sidebar-heading {
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-/* Add responsiveness for smaller screens */
+/* Mobile view adjustments */
 @media (max-width: 768px) {
+  /* Map adjusts to half screen height */
   .map-container {
+    height: 50vh;
+  }
+
+  /* Tooltip adjustments for mobile */
+  .tooltip {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  /* Sidebar becomes full-width */
+  .sidebar {
     width: 100%;
     padding: 1rem;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  /* Tabs stack vertically */
+  .tabs {
+    flex-direction: column;
+  }
+
+  .tab {
+    width: 100%;
   }
 }
 
-/* Optional dark mode styling */
-@media (prefers-color-scheme: dark) {
-  .map-container {
-    background-color: #333; /* Dark background */
-    color: #fff; /* Light text */
+/* Legend Box for color coding */
+.legend-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Legend Color */
+.legend-color {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+/* Tooltip for Hovered Province */
+.hover-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -100%);
+}
+
+/* Legend for mobile */
+@media (max-width: 768px) {
+  .legend-box {
+    justify-content: center;
+    gap: 10px;
   }
+}
+
+/* Legend Colors */
+.legend-color-blue {
+  background-color: #1bb2b5;
+}
+
+.legend-color-gray {
+  background-color: #d3d3d3;
 }

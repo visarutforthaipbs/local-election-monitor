@@ -114,12 +114,13 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
       {activeTab === "budget" && budgetData ? (
         <div className="card">
           <h3 className="card-heading">
-            การใช้งบประมาณของ CEO คนก่อน {budgetData.name}
+            การใช้งบประมาณอบจ. {budgetData.pao?.name || "ไม่ทราบจังหวัด"} ปี
+            2567
           </h3>
           <div className="separator"></div>
 
           <p className="card-text">
-            นายก อบจ. คนก่อน:{" "}
+            นายก อบจ.:{" "}
             <span className="budget-amount">
               {budgetData.pao?.chiefExecutives?.[0]?.name || "N/A"}
             </span>
@@ -195,6 +196,18 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Data Source or Disclaimer */}
+          <p className="data-source">
+            ที่มาข้อมูล:{" "}
+            <a
+              href="https://localbudgeting.actai.co/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              องค์กรต่อต้านคอร์รัปชัน (ประเทศไทย)
+            </a>
+          </p>
         </div>
       ) : (
         <UserNeedsWordCloud province={budgetData?.pao?.name} />

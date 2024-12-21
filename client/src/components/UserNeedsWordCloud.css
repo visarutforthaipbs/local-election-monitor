@@ -63,12 +63,27 @@
   font-family: "IBM Plex Sans Thai", sans-serif;
 }
 
+.chart-container {
+  margin-top: 1rem;
+  background-color: #fff8e1;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 @media (max-width: 768px) {
+  .chart-container {
+    padding: 0.5rem;
+  }
+
+  .wordcloud-section h4 {
+    font-size: 1rem; /* Adjust heading size */
+  }
+
   .needs-form {
-    flex-direction: column;
+    flex-direction: column; /* Stack form fields vertically */
   }
 
   .needs-button {
-    width: 100%;
+    width: 100%; /* Full width button */
   }
 }

@@ -115,3 +115,15 @@
   background-color: #7d6756;
   font-family: "IBM Plex Sans Thai", sans-serif;
 }
+
+@media (max-width: 768px) {
+  .popup-container {
+    width: 90%;
+    padding: 0.5rem;
+  }
+
+  .popup-button {
+    width: 100%; /* Full width button for mobile */
+    margin-top: 0.5rem;
+  }
+}
