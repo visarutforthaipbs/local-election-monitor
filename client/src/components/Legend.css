@@ -1,0 +1,29 @@
+.legend {
+  position: absolute; /* Fixed relative to the map view */
+  bottom: 10px; /* 10px from the bottom */
+  right: 10px; /* 10px from the right */
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  z-index: 1000; /* High z-index to appear above map */
+  width: 150px; /* Set width for the box */
+}
+
+.legend h4 {
+  font-size: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.1rem;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

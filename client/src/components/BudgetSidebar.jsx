@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   PieChart,
   Pie,
@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import "./BudgetSidebar.css";
 import UserNeedsWordCloud from "./UserNeedsWordCloud";
-import logoGif from "../assets/logo03.gif"; // Import the GIF
+import logoGif from "../assets/logo03.gif";
 
 // Helper function to format numbers
 const formatNumber = (number) => {
@@ -22,32 +22,36 @@ const formatNumber = (number) => {
     return "N/A";
   }
   if (number >= 1000000000) {
-    return (number / 1000000000).toFixed(1) + "พันล้าน";
+    return (number / 1000000000).toFixed(1) + " พันล้าน";
   } else if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + "ล้าน";
+    return (number / 1000000).toFixed(1) + " ล้าน";
   } else if (number >= 1000) {
-    return (number / 1000).toFixed(1) + "พัน";
+    return (number / 1000).toFixed(1) + " พัน";
   } else {
     return number.toLocaleString();
   }
 };
 
-const BudgetSidebar = ({ budgetData }) => {
-  // Prepare the data for the Pie chart
-  const chartData = budgetData?.groupedByArea?.map((area) => ({
-    name: area.area,
-    total: parseFloat(area.total),
-  }));
+const BudgetSidebar = ({ budgetData, electionProgress }) => {
+  const [activeTab, setActiveTab] = useState("budget"); // State for tabs
 
-  // Prepare data for Stacked Bar chart
-  const stackedChartData = budgetData?.groupedByArea?.map((area) => {
-    const plans = Object.fromEntries(
-      area.plans.map((plan) => [plan.plan, plan.total])
-    );
-    return { area: area.area, ...plans };
-  });
+  // Prepare Pie chart data
+  const chartData =
+    budgetData?.groupedByArea?.map((area) => ({
+      name: area.area,
+      total: parseFloat(area.total),
+    })) || [];
 
-  // Collect all unique plan names to dynamically render the Bar components
+  // Prepare Stacked Bar chart data
+  const stackedChartData =
+    budgetData?.groupedByArea?.map((area) => {
+      const plans = Object.fromEntries(
+        area.plans.map((plan) => [plan.plan, plan.total])
+      );
+      return { area: area.area, ...plans };
+    }) || [];
+
+  // Collect plan names for Bar chart
   const planNames = Array.from(
     new Set(
       budgetData?.groupedByArea.flatMap((area) =>
@@ -56,56 +60,93 @@ const BudgetSidebar = ({ budgetData }) => {
     )
   );
 
+  // Show only election progress when no province is selected
+  if (!budgetData) {
+    return (
+      <div className="sidebar">
+        <div className="logo-container">
+          <img src={logoGif} alt="Logo" className="sidebar-logo" />
+          <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
+          <div className="separator-line"></div>
+        </div>
+
+        {/* Election Progress */}
+        <div className="election-progress-card">
+          <h3 className="card-heading">สถานะการเลือกตั้งอบจ.ในปัจจุบัน</h3>
+          <p className="card-text">
+            ✅ จังหวัดที่เลือกตั้งแล้ว:{" "}
+            <span className="election-count">23/77</span>
+          </p>
+          <p className="card-text">
+            ⏳ จังหวัดที่กำลังจัดเลือกตั้ง:{" "}
+            <span className="election-count">อุตรดิตถ์, อุบลราชธานี</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="sidebar">
       <div className="logo-container">
         <img src={logoGif} alt="Logo" className="sidebar-logo" />
+        <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>{" "}
+        <div className="separator-line"></div>
       </div>
-      <h2 className="sidebar-subheading">จับตาเลือกนายกอบจ. 2567-2568</h2>
-      <div className="separator"></div>
-      {budgetData ? (
+
+      {/* Tabs */}
+      <div className="tabs">
+        <button
+          className={`tab ${activeTab === "budget" ? "active" : ""}`}
+          onClick={() => setActiveTab("budget")}
+        >
+          งบประมาณ
+        </button>
+        <button
+          className={`tab ${activeTab === "needs" ? "active" : ""}`}
+          onClick={() => setActiveTab("needs")}
+        >
+          ความต้องการของประชาชน
+        </button>
+      </div>
+
+      {/* Budget Tab */}
+      {activeTab === "budget" && budgetData ? (
         <div className="card">
           <h3 className="card-heading">
             การใช้งบประมาณของ CEO คนก่อน {budgetData.name}
           </h3>
+          <div className="separator"></div>
 
-          {/* CEO คนก่อน */}
           <p className="card-text">
             นายก อบจ. คนก่อน:{" "}
             <span className="budget-amount">
-              {budgetData.pao?.chiefExecutives &&
-              budgetData.pao.chiefExecutives.length > 0
-                ? budgetData.pao.chiefExecutives[0].name
-                : "N/A"}
+              {budgetData.pao?.chiefExecutives?.[0]?.name || "N/A"}
             </span>
           </p>
 
-          {/* ระยะเวลารับตำแหน่ง */}
-          {/* ระยะเวลารับตำแหน่ง */}
           <p className="card-text">
             ระยะเวลารับตำแหน่ง:{" "}
             <span className="budget-amount">
-              {budgetData.pao.chiefExecutives[0].inOffice}
+              {budgetData.pao?.chiefExecutives?.[0]?.inOffice || "N/A"}
             </span>
           </p>
 
-          {/* งบทั้งหมด */}
           <p className="card-text-budget">
             งบประมาณทั้งหมด :{" "}
             <span className="budget-amount">
-              {formatNumber(budgetData.total) || "N/A"} บาท
+              {formatNumber(budgetData.total)} บาท
             </span>
           </p>
 
-          {/* ประชากรที่ดูแล */}
           <p className="card-text">
             ประชากร:{" "}
             <span className="budget-amount">
-              {formatNumber(budgetData.pao.population) || "N/A"}
+              {formatNumber(budgetData.pao?.population)} คน
             </span>
           </p>
 
-          {/* Pie Chart for Budget Breakdown */}
+          {/* Pie Chart */}
           <div className="chart-container">
             <h4 className="chart-heading">การใช้งบประมาณตามประเภท</h4>
             <ResponsiveContainer width="100%" height={300}>
@@ -133,7 +174,7 @@ const BudgetSidebar = ({ budgetData }) => {
             </ResponsiveContainer>
           </div>
 
-          {/* Stacked Bar Chart */}
+          {/* Bar Chart */}
           <div className="chart-container">
             <h4 className="chart-heading">การใช้งบประมาณตามแผน</h4>
             <ResponsiveContainer width="100%" height={400}>
@@ -146,7 +187,7 @@ const BudgetSidebar = ({ budgetData }) => {
                 {planNames.map((plan, index) => (
                   <Bar
                     key={index}
-                    dataKey={plan} // Dynamically use plan names
+                    dataKey={plan}
                     stackId="a"
                     fill={index % 2 === 0 ? "#8C6A4A" : "#D3C0A6"}
                   />
@@ -154,12 +195,9 @@ const BudgetSidebar = ({ budgetData }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          {/* New Component */}
-          <UserNeedsWordCloud province={budgetData?.pao.name} />
         </div>
       ) : (
-        <p className="no-budget">เลือกที่จังหวัดของท่านเพื่อดูงบประมาณ</p>
+        <UserNeedsWordCloud province={budgetData?.pao?.name} />
       )}
 
       <div className="separator"></div>

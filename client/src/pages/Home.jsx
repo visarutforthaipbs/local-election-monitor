@@ -7,6 +7,7 @@ import MapView from "../components/MapView";
 import ElectionPopup from "../components/ElectionPopup";
 import provinceNameMap from "../province_name_map.json";
 import "./Home.css";
+import Legend from "../components/Legend";
 
 const geoUrl = "/thailandWithName.json";
 
@@ -17,6 +18,12 @@ function Home() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedElectionData, setSelectedElectionData] = useState(null);
   const [isTourReady, setIsTourReady] = useState(false); // Ensure tour starts after DOM is ready
+  const [electionProgress, setElectionProgress] = useState({
+    completed: 23,
+    upcoming: 2,
+    nextProvince: ["อุตรดิตถ์", "อุบลราชธานี"], // Use an array
+  }); // Election progress state
+  console.log(electionProgress);
 
   // Prepare province options for react-select
   const provinceOptions = Object.entries(provinceNameMap).map(
@@ -31,6 +38,23 @@ function Home() {
       .get("https://local-election-monitor.onrender.com/api/elections")
       .then((response) => {
         setElections(response.data);
+
+        // Calculate election progress
+        const completed = response.data.filter(
+          (e) => e.status === "completed"
+        ).length;
+        const upcoming = response.data.filter(
+          (e) => e.status === "upcoming"
+        ).length;
+        const nextProvinces = response.data
+          .filter((e) => e.status === "upcoming")
+          .map((e) => e.province); // Collect all upcoming provinces in an array
+
+        setElectionProgress({
+          completed,
+          upcoming,
+          nextProvince: nextProvinces.length > 0 ? nextProvinces : ["N/A"], // Fallback to ["N/A"]
+        });
       })
       .catch((error) => console.error("Error fetching elections data:", error));
   }, []);
@@ -108,7 +132,13 @@ function Home() {
 
           {/* Main Content */}
           <div className="home-content">
-            <BudgetSidebar budgetData={budgetData} />
+            {/* Pass election progress to Sidebar */}
+            <BudgetSidebar
+              budgetData={budgetData}
+              electionProgress={electionProgress}
+            />
+            {/* Add Legend Component */}
+            <Legend />
             <MapView
               geoUrl={geoUrl}
               handleProvinceClick={handleProvinceClick}
