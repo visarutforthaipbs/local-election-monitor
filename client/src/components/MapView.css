@@ -115,6 +115,7 @@
 }
 
 .toggle-button {
+  position: relative; /* So the tooltip is positioned relative to this button */
   width: 100%;
   padding: 1rem;
   font-size: 1rem;
@@ -128,6 +129,47 @@
   font-family: inherit;
 }
 
+/* The tooltip content (hidden by default) */
+.toggle-button::after {
+  content: "คลิกเพื่อเปิดและอีกครั้งเพื่อปิด";
+  position: absolute;
+  bottom: 100%; /* Position above the button */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.6rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* The little arrow pointing down */
+.toggle-button::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Show tooltip on hover */
+.toggle-button:hover::after,
+.toggle-button:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hover style for button */
 .toggle-button:hover {
   background-color: #1899a3;
 }

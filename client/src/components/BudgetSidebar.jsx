@@ -160,7 +160,8 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                   cy="50%"
                   outerRadius="80%"
                   fill="#8C6A4A"
-                  label
+                  // Format the slice labels on the chart
+                  label={(entry) => formatNumber(entry.value)}
                 >
                   {chartData.map((entry, index) => (
                     <Cell
@@ -169,8 +170,10 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
+                {/* Format the hover tooltip too */}
+                <Tooltip
+                  formatter={(value, name) => [formatNumber(value), name]}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -179,12 +182,27 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           <div className="chart-container">
             <h4 className="chart-heading">การใช้งบประมาณตามแผน</h4>
             <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={stackedChartData}>
+              <BarChart
+                data={stackedChartData}
+                margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="area" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+                <YAxis
+                  tickFormatter={(value) => {
+                    if (value >= 1_000_000)
+                      return (value / 1_000_000).toFixed(1) + "ล้าน";
+                    if (value >= 1_000)
+                      return (value / 1_000).toFixed(1) + "พัน";
+                    return value;
+                  }}
+                  width={60} // give a bit more space
+                  tick={{ fontSize: 12 }}
+                />
+                {/* Format numbers inside the tooltip as well */}
+                <Tooltip
+                  formatter={(value, name) => [formatNumber(value), name]}
+                />
                 {planNames.map((plan, index) => (
                   <Bar
                     key={index}

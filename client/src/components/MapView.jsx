@@ -80,7 +80,7 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
             className="toggle-button"
             onClick={() => setIsTabOpen(!isTabOpen)}
           >
-            ความต้องการของประชาชน
+            ความต้องการของประชาชน 👆{" "}
           </button>
           {isTabOpen && (
             <div className="tab-content">
