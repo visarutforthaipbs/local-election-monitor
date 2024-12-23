@@ -10,6 +10,7 @@
   right: 20px; /* Distance from the right */
   width: 250px; /* Set a smaller width */
   z-index: 1000; /* Ensure it stays above other elements */
+  display: none;
 }
 
 .search-bar .react-select__control {
@@ -30,4 +31,15 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+}
+
+/* Sidebar gets a fixed or flexible width */
+.sidebar {
+  flex: 0 0 28%; /* This sets a fixed 350px width */
+  /* or flex: 0 0 30%; for a percentage-based width */
+}
+
+/* The map or main area grows to fill the remaining space */
+.map-section {
+  flex: 1; /* take remaining space */
 }
