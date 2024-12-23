@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+// MapView.jsx
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { geoPath, geoCentroid } from "d3-geo";
 import provincesData from "../province_name_map.json";
-import UserNeedsWordCloud from "./UserNeedsWordCloud"; // Import WordCloud
+import UserNeedsWordCloud from "./UserNeedsWordCloud";
 import "./MapView.css";
 
 const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
-  // Detect if the screen is mobile
+  // Detect if we're on mobile
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Update screen size on resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // State for Tooltip
+  // A ref for the map container <div>, so we can get its bounding box
+  const mapContainerRef = useRef(null);
+
+  // Tooltip state: whether it’s visible, text, and x/y (relative to container)
   const [tooltip, setTooltip] = useState({
     show: false,
     name: "",
@@ -25,35 +27,53 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
     y: 0,
   });
 
-  // State for Collapsible Tab
+  // For the collapsible tab on mobile
   const [isTabOpen, setIsTabOpen] = useState(false);
+
+  // The selected Thai province for word cloud
   const [selectedProvince, setSelectedProvince] = useState(null);
 
-  // Handle Tooltip Position using Centroid
-  const handleMouseMove = (geo) => {
-    const centroid = geoCentroid(geo);
+  // When the mouse moves over a province, position tooltip near the cursor
+  const handleMouseMove = (event, geo) => {
+    // Get bounding rectangle of the .map-container
+    const rect = mapContainerRef.current?.getBoundingClientRect();
+    if (!rect) return; // If the ref isn't set yet, abort
+
+    // Calculate X/Y relative to the container’s top-left
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
     setTooltip({
       show: true,
       name: provincesData[geo.properties.name] || geo.properties.name,
-      x: centroid[0],
-      y: centroid[1],
+      x,
+      y,
     });
   };
 
-  // Hide Tooltip on Mouse Leave
   const handleMouseLeave = () => {
     setTooltip({ show: false, name: "", x: 0, y: 0 });
   };
 
+  // Convert the English provinceName -> Thai, open collapsible, etc.
   const handleProvinceClickWithData = (provinceName) => {
     handleProvinceClick(provinceName);
-    setSelectedProvince(provinceName); // Update selected province
-    setIsTabOpen(true); // Open collapsible tab
+
+    const thaiName = provincesData[provinceName];
+    if (!thaiName) {
+      console.warn("No Thai name found for:", provinceName);
+      return;
+    }
+    setSelectedProvince(thaiName);
+    setIsTabOpen(true);
   };
 
   return (
-    <div className="map-container">
-      {/* Collapsible Tab */}
+    <div
+      className="map-container"
+      ref={mapContainerRef} /* Attach the ref here */
+    >
+      {/* Collapsible Tab (mobile only) */}
       {isMobile && (
         <div className={`collapsible-tab ${isTabOpen ? "open" : ""}`}>
           <button
@@ -84,9 +104,9 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
           className="tooltip"
           style={{
             position: "absolute",
-            left: `${tooltip.x}px`,
-            top: `${tooltip.y}px`,
-            transform: "translate(115vh, 10vh)",
+            left: tooltip.x + 15, // offset so it’s not under the cursor
+            top: tooltip.y + 15,
+            transform: "none", // remove any large translation
           }}
         >
           {tooltip.name}
@@ -97,12 +117,12 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: isMobile ? 3500 : 1800, // Adjust scale for desktop
-          center: isMobile ? [101, 11.5] : [100, 13.5], // Adjust center for desktop
+          scale: isMobile ? 3500 : 1800,
+          center: isMobile ? [101, 11.5] : [100, 13.5],
         }}
         style={{
           width: "100%",
-          height: isMobile ? "105vh" : "100vh", // Dynamic height adjustment
+          height: isMobile ? "105vh" : "100vh",
         }}
       >
         <Geographies geography={geoUrl}>
@@ -122,7 +142,7 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
                     hover: { fill: "#8C6A4A", outline: "none" },
                     pressed: { fill: "#735639", outline: "none" },
                   }}
-                  onMouseMove={() => handleMouseMove(geo)}
+                  onMouseMove={(event) => handleMouseMove(event, geo)}
                   onMouseLeave={handleMouseLeave}
                   onClick={() =>
                     handleProvinceClickWithData(geo.properties.name)
@@ -137,7 +157,6 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
   );
 };
 
-// Prop validation
 MapView.propTypes = {
   geoUrl: PropTypes.string.isRequired,
   handleProvinceClick: PropTypes.func.isRequired,

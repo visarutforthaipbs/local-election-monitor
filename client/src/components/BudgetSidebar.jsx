@@ -75,11 +75,11 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           <h3 className="card-heading">สถานะการเลือกตั้งอบจ.ในปัจจุบัน</h3>
           <p className="card-text">
             ✅ จังหวัดที่เลือกตั้งแล้ว:{" "}
-            <span className="election-count">23/77</span>
+            <span className="election-count">25/77</span>
           </p>
           <p className="card-text">
             ⏳ จังหวัดที่กำลังจัดเลือกตั้ง:{" "}
-            <span className="election-count">อุตรดิตถ์, อุบลราชธานี</span>
+            <span className="election-count"> ไม่มี </span>
           </p>
         </div>
       </div>
