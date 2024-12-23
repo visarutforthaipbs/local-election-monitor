@@ -16,6 +16,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   z-index: 1000;
+  overflow: scroll;
 }
 
 /* Header */
@@ -33,6 +34,7 @@
   font-style: italic;
   color: whitesmoke;
   margin-bottom: 1.5rem;
+  overflow: scroll;
 }
 
 /* Winner Section */
@@ -64,10 +66,78 @@
   color: #7d6756;
 }
 
+/* Toggle Header */
+.toggle-header {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0rem 0.5rem;
+  border-radius: 6px;
+  background-color: #f4f1ea;
+  color: #5a4e40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  position: relative;
+}
+
+.toggle-header:hover::after {
+  content: "รวมข้อมูลโดย Rocket Media Lab";
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background-color: gray;
+  color: #fff;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.5rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: lighter;
+}
+
+.toggle-header:hover {
+  background-color: #eaeaea;
+}
+
+/* Nested Details Card */
+.nested-details-card {
+  margin-top: 0.5rem;
+  padding: 0.8rem;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nested-header {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: #5a4e40;
+  font-size: 0.9rem;
+}
+
+.nested-content {
+  padding-left: 0.8rem;
+}
+
+.winner-details-list {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+}
+
+.winner-details-item {
+  font-size: 0.85rem;
+  color: #7d6756;
+  line-height: 1.4;
+  list-style-type: disc;
+  text-align: left important;
+}
+
 /* Results Section */
 .election-results h3,
 .other-candidates h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: whitesmoke;
   margin-bottom: 0.5rem;
 }
@@ -113,17 +183,49 @@
 
 .close-button:hover {
   background-color: #7d6756;
-  font-family: "IBM Plex Sans Thai", sans-serif;
 }
 
 @media (max-width: 768px) {
-  .popup-container {
-    width: 90%;
-    padding: 0.5rem;
+  .election-popup {
+    width: 70%;
+    padding: 1rem;
+    max-height: 50%;
+    overflow: scroll;
   }
 
-  .popup-button {
-    width: 100%; /* Full width button for mobile */
-    margin-top: 0.5rem;
+  .winner-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .winner-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .winner-details {
+    text-align: center;
+  }
+
+  .election-results ul,
+  .other-candidates ul {
+    padding-left: 10;
+  }
+
+  .candidates-list li {
+    font-size: 0.85rem;
+  }
+
+  .close-button {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1rem;
   }
 }

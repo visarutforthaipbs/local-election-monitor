@@ -1,7 +1,7 @@
-/* Sidebar container */
+/* General Styles */
 .sidebar {
-  width: 100%; /* Make sidebar full width */
-  padding: 1rem; /* Reduce padding */
+  width: 100%; /* Full width for responsiveness */
+  padding: 1rem;
   background-color: #1bb2b5;
   color: #5a4e40;
   display: flex;
@@ -13,33 +13,34 @@
 /* Logo Container */
 .logo-container {
   display: flex;
-  flex-direction: column; /* Align vertically */
-  align-items: center; /* Center align */
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 1rem;
+  text-decoration: none;
 }
 
-/* Logo Style */
 .sidebar-logo {
   width: 40%;
   height: auto;
   animation: fadeIn 1.5s ease-in-out;
-  margin-bottom: 0.5rem; /* Add space between logo and slogan */
+  margin-bottom: 0.5rem;
+  text-decoration: none;
 }
 
-/* Slogan under the logo */
 .slogan {
   font-size: 1.2rem;
   font-weight: 500;
   color: white;
   text-align: center;
-  margin-bottom: 0.5rem; /* Spacing before separator */
+  margin-bottom: 0.5rem;
+  text-decoration: none;
 }
 
-/* Separator under the slogan */
-.slogan-separator {
-  border-top: 1px solid #d3c0a6;
+.separator-line {
   width: 100%;
-  margin: 0.5rem 0;
+  height: 1px;
+  background-color: #d3c0a6;
+  margin: 1rem 0;
 }
 
 /* Fade-in animation */
@@ -52,7 +53,7 @@
   }
 }
 
-/* Tabs for switching views */
+/* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
@@ -78,10 +79,9 @@
 .tab.active {
   background-color: #8c6a4a;
   color: white;
-  font-weight: medium;
 }
 
-/* Card for budget data */
+/* Card Styles */
 .card {
   background-color: #1bb584;
   padding: 1.5rem;
@@ -90,20 +90,13 @@
   margin-bottom: 1.5rem;
 }
 
-/* Headings and text inside cards */
 .card-heading {
   font-size: 1.4rem;
   color: white;
   margin-bottom: 1rem;
-  font-weight: 500;
 }
 
 .card-text {
-  font-size: 1rem;
-  color: white;
-}
-
-.ceo-info {
   font-size: 1rem;
   color: white;
 }
@@ -131,24 +124,9 @@
   font-size: 1.4rem;
   color: #8c6a4a;
   margin-bottom: 1rem;
-  font-weight: 600;
 }
 
-/* Separator between sections */
-.separator {
-  border-top: 1px solid #d3c0a6;
-  margin: 1rem 0;
-}
-
-/* No budget message */
-.no-budget {
-  font-size: 1.2rem;
-  color: whitesmoke;
-  text-align: center;
-  font-style: italic;
-}
-
-/* Election progress card */
+/* Election Progress Card */
 .election-progress-card {
   padding: 1rem;
   margin: 1rem 0;
@@ -162,73 +140,7 @@
   color: #8c6a4a;
 }
 
-/* Responsive Design Adjustments */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .sidebar-logo {
-    width: 60%;
-  }
-
-  .tabs {
-    flex-direction: column;
-  }
-
-  .tab {
-    width: 100%;
-    text-align: center;
-  }
-}
-/* Add a separator style */
-.separator-line {
-  width: 100%;
-  height: 1px;
-  background-color: #d3c0a6;
-  margin: 1rem 0;
-}
-
-/* Adjust the slogan for spacing */
-.sidebar-slogan {
-  text-align: center;
-  color: white;
-  font-size: 1.2rem;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem; /* Add spacing below slogan */
-}
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    padding: 1rem; /* Adjust padding for smaller screens */
-  }
-
-  .logo-container img {
-    width: 50%; /* Reduce logo size */
-    margin: 0 auto; /* Center logo */
-  }
-
-  .tabs {
-    flex-direction: column; /* Stack tabs vertically */
-    width: 100%;
-  }
-
-  .tab {
-    width: 100%; /* Full width for buttons */
-    padding: 10px;
-  }
-
-  .election-progress-card {
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border-radius: 6px;
-  }
-
-  .election-count {
-    font-size: 0.9rem; /* Adjust font size */
-  }
-}
+/* Data Source */
 .data-source {
   font-size: 0.9rem;
   color: #5a4e40;
@@ -238,10 +150,70 @@
 }
 
 .data-source a {
-  color: whitesmoke; /* Link color */
+  color: whitesmoke;
   text-decoration: none;
 }
 
 .data-source a:hover {
-  text-decoration: underline; /* Underline on hover */
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .logo-container img {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  .tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .card-heading {
+    font-size: 1.2rem;
+  }
+
+  .card-text,
+  .card-text-budget {
+    font-size: 0.9rem;
+  }
+
+  .chart-container {
+    padding: 1rem;
+  }
+
+  .chart-heading {
+    font-size: 1.1rem;
+  }
+
+  .election-progress-card {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 6px;
+  }
+
+  .election-count {
+    font-size: 0.9rem;
+  }
+
+  .data-source {
+    font-size: 0.8rem;
+  }
 }

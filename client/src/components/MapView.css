@@ -1,7 +1,7 @@
 /* Map Container */
 .map-container {
   width: 100%;
-  height: 100vh; /* Full height for the map */
+  height: 100vh;
   position: relative;
   overflow: hidden;
 }
@@ -9,24 +9,22 @@
 /* Tooltip Styles */
 .tooltip {
   position: absolute;
-  padding: 8px 12px;
-  background: rgba(27, 178, 181, 0.95); /* Transparent turquoise */
+  padding: 6px 10px;
+  background: rgba(27, 178, 181, 0.95);
   color: white;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  pointer-events: none; /* Prevent interference */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
   z-index: 10;
   white-space: nowrap;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -120%);
 }
 
-/* Tooltip arrow pointer */
 .tooltip::after {
   content: "";
   position: absolute;
-  bottom: -6px;
+  top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 6px;
@@ -34,133 +32,173 @@
   border-color: rgba(27, 178, 181, 0.95) transparent transparent transparent;
 }
 
-/* Geography (provinces) styling */
+/* Geography Styles */
 .geography {
   outline: none;
-  transition: all 0.3s ease; /* Smooth animations */
-  stroke: #ffffff; /* White border */
+  transition: all 0.3s ease;
+  stroke: #ffffff;
   stroke-width: 1px;
-  vector-effect: non-scaling-stroke; /* Preserve stroke width */
-  border-radius: 6px; /* Slightly rounded edges for smoother shape */
+  vector-effect: non-scaling-stroke;
 }
 
-/* Hover Effect */
+/* Hover Effects */
 .geography:hover {
-  fill: #8c6a4a !important; /* Highlight hover color */
+  fill: #8c6a4a;
   cursor: pointer;
-
-  /* Popup shadow and scale */
-  transform: scale(0.2.1); /* Slightly enlarge */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Shadow effect */
-  z-index: 2; /* Ensure it appears on top */
-  filter: brightness(1.1); /* Slightly brighten the color */
 }
 
-/* Active (clicked) Effect */
 .geography:active {
-  fill: #735639 !important;
-  transform: scale(0.5.05); /* Keep slightly larger when active */
+  fill: #735639;
 }
 
-/* Sidebar Responsiveness */
+/* Sidebar */
 .sidebar {
-  width: 28%; /* Slightly smaller width */
-  padding: 1.5rem;
-  background-color: #1bb2b5; /* Turquoise background */
-  color: #5a4e40; /* Text color */
+  width: 25%;
+  padding: 1rem;
+  background-color: #1bb2b5;
+  color: #5a4e40;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  gap: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 
-/* Sidebar Heading */
-.sidebar-heading {
-  font-size: 2rem;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .map-container {
+    height: 100vh;
+  }
+
+  .tooltip {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container {
+    height: 100vh;
+  }
+
+  .tooltip {
+    font-size: 0.6rem;
+    padding: 4px 6px;
+  }
+  .toggle-button {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    background-color: #1bb2b5;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+    font-family: inherit;
+    display: none;
+  }
+}
+
+/* Collapsible Tab */
+.collapsible-tab {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1bb2b5;
   color: white;
+  z-index: 9999;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: max-height 0.5s ease-in-out;
+}
+
+.toggle-button {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  background-color: #1bb2b5;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
+  font-family: inherit;
+}
+
+.toggle-button:hover {
+  background-color: #1899a3;
+}
+
+.tab-content {
+  padding: 1rem;
+  background-color: #fdfdfd;
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 50vh;
+  overflow-y: auto;
+  border-bottom: 2px solid #1bb2b5;
+}
+
+/* Tab Animation */
+.collapsible-tab.open {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* WordCloud Container */
+.wordcloud-container {
+  width: 100%;
+  height: auto;
+  padding: 0.5rem;
+  background-color: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* WordCloud Header */
+.wordcloud-header {
+  font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  color: #5a4e40;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
-/* Mobile view adjustments */
+/* WordCloud Placeholder */
+.wordcloud-placeholder {
+  padding: 1rem;
+  text-align: center;
+  color: #4a4a4a;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Mobile Adjustments */
 @media (max-width: 768px) {
-  /* Map adjusts to half screen height */
-  .map-container {
-    height: 50vh;
-  }
-
-  /* Tooltip adjustments for mobile */
-  .tooltip {
-    font-size: 0.8rem;
-    padding: 6px 10px;
-  }
-
-  /* Sidebar becomes full-width */
-  .sidebar {
-    width: 100%;
+  .wordcloud-container {
     padding: 1rem;
-    box-shadow: none;
-    border-radius: 0;
+    max-height: 300px;
+    overflow-y: auto;
   }
 
-  /* Tabs stack vertically */
-  .tabs {
-    flex-direction: column;
+  .wordcloud-header {
+    font-size: 0.9rem;
   }
 
-  .tab {
-    width: 100%;
+  .wordcloud-placeholder {
+    font-size: 0.8rem;
   }
-}
-
-/* Legend Box for color coding */
-.legend-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
-  border-radius: 5px;
-  background-color: #f4f4f4;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Legend Color */
-.legend-color {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-}
-
-/* Tooltip for Hovered Province */
-.hover-tooltip {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 1000;
-  transform: translate(-50%, -100%);
-}
-
-/* Legend for mobile */
-@media (max-width: 768px) {
-  .legend-box {
-    justify-content: center;
-    gap: 10px;
-  }
-}
-
-/* Legend Colors */
-.legend-color-blue {
-  background-color: #1bb2b5;
-}
-
-.legend-color-gray {
-  background-color: #d3d3d3;
 }

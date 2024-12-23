@@ -64,11 +64,11 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
   if (!budgetData) {
     return (
       <div className="sidebar">
-        <div className="logo-container">
+        <a href="/" className="logo-container">
           <img src={logoGif} alt="Logo" className="sidebar-logo" />
           <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
           <div className="separator-line"></div>
-        </div>
+        </a>
 
         {/* Election Progress */}
         <div className="election-progress-card">

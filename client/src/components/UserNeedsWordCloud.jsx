@@ -100,10 +100,10 @@ const UserNeedsWordCloud = ({ province = "" }) => {
                 words={generateWordCloudData()}
                 options={{
                   rotations: 0,
-                  fontSizes: [15, 50],
+                  fontSizes: [16, Math.min(30, window.innerWidth / 15)], // Dynamic font sizes based on screen size
                   rotationAngles: [0, 0],
                   enableTooltip: true,
-                  fontFamily: "IBM Plex Sans Thai, serif", // Add your font-family here
+                  fontFamily: "IBM Plex Sans Thai, serif",
                 }}
               />
             </div>

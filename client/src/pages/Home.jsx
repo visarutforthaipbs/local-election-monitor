@@ -143,6 +143,8 @@ function Home() {
               geoUrl={geoUrl}
               handleProvinceClick={handleProvinceClick}
               getProvinceFillColor={getProvinceFillColor}
+              budgetData={budgetData} // Pass budgetData
+              electionProgress={electionProgress} // Pass electionProgress
             />
             {isPopupVisible && (
               <ElectionPopup

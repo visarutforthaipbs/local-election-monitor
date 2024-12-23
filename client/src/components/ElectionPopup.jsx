@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ElectionPopup.css";
 import uncleImage from "/unCle.png";
 
 const ElectionPopup = ({ isVisible, onClose, electionData }) => {
   if (!isVisible || !electionData) return null;
+
+  // State for toggling nested details
+  const [showDetails, setShowDetails] = useState(false);
 
   // Sort candidates to get the winner and others
   const sortedCandidates = [...electionData.candidates].sort(
@@ -40,6 +43,30 @@ const ElectionPopup = ({ isVisible, onClose, electionData }) => {
           <p className="winner-info">
             คะแนน: {winner.votes.toLocaleString()} ({winner.percentage}%)
           </p>
+
+          {/* Toggle Section for Additional Info */}
+          <div
+            className="toggle-header"
+            onClick={() => setShowDetails(!showDetails)}
+            style={{ cursor: "pointer" }}
+          >
+            <h4 className="winner-details-header">ข้อมูลเพิ่มเติม</h4>
+          </div>
+          {showDetails && (
+            <div className="nested-details-card">
+              <p className="winner-info">
+                <strong>สังกัดคาดการณ์:</strong> {winner.nationalParty}
+              </p>
+              <ul className="winner-details-list">
+                {winner.details &&
+                  winner.details.map((detail, index) => (
+                    <li key={index} className="winner-details-item">
+                      {detail}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
 
