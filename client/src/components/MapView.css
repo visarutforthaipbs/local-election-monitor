@@ -26,7 +26,7 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-left: -5px;
+  transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
   border-color: rgba(27, 178, 181, 0.95) transparent transparent transparent;
@@ -41,7 +41,6 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* Hover Effects */
 .geography:hover {
   fill: #8c6a4a;
   cursor: pointer;
@@ -82,27 +81,9 @@
 }
 
 @media (max-width: 480px) {
-  .map-container {
-    height: 100vh;
-  }
-
   .tooltip {
     font-size: 0.6rem;
     padding: 4px 6px;
-  }
-  .toggle-button {
-    width: 100%;
-    padding: 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    background-color: #1bb2b5;
-    color: white;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s;
-    font-family: inherit;
-    display: none;
   }
 }
 
@@ -147,7 +128,6 @@
   border-bottom: 2px solid #1bb2b5;
 }
 
-/* Tab Animation */
 .collapsible-tab.open {
   max-height: 70vh;
   overflow-y: auto;
@@ -156,7 +136,6 @@
 /* WordCloud Container */
 .wordcloud-container {
   width: 100%;
-  height: auto;
   padding: 0.5rem;
   background-color: #fdfdfd;
   border: 1px solid #ddd;
@@ -168,7 +147,6 @@
   justify-content: center;
 }
 
-/* WordCloud Header */
 .wordcloud-header {
   font-size: 1rem;
   font-weight: bold;
@@ -177,7 +155,6 @@
   text-align: center;
 }
 
-/* WordCloud Placeholder */
 .wordcloud-placeholder {
   padding: 1rem;
   text-align: center;
@@ -186,7 +163,6 @@
   font-size: 0.9rem;
 }
 
-/* Mobile Adjustments */
 @media (max-width: 768px) {
   .wordcloud-container {
     padding: 1rem;
@@ -200,5 +176,13 @@
 
   .wordcloud-placeholder {
     font-size: 0.8rem;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .toggle-button {
+    display: none;
   }
 }
