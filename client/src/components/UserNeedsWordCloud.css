@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@100;200;300;400;500;600;700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+.root {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+}
+
 .user-needs-container {
   margin-top: 0.5rem;
   background-color: #fdf7e3;
@@ -30,12 +34,13 @@
 
 .needs-button {
   padding: 0.5rem 1rem;
-  background-color: #8c6a4a;
+  background-color: #e98925;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-family: "IBM Plex Sans Thai", sans-serif;
 }
 
 .needs-button:hover {

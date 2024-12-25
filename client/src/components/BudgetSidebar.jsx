@@ -82,6 +82,12 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
             <span className="election-count"> ไม่มี </span>
           </p>
         </div>
+        <div className="separator-line"></div>
+        <div className="logo-container-2">
+          <img src="./3.png" alt="pi-logo" className="logo-2" />
+          <img src="./1.png" alt="local-logo" className="logo-2" />
+          <img src="./2.png" alt="thai-pbs" className="logo-2" />
+        </div>
       </div>
     );
   }
@@ -166,7 +172,7 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={index % 2 === 0 ? "#8C6A4A" : "#D3C0A6"}
+                      fill={index % 2 === 0 ? "#e98925" : "#D3C0A6"}
                     />
                   ))}
                 </Pie>
@@ -208,7 +214,7 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                     key={index}
                     dataKey={plan}
                     stackId="a"
-                    fill={index % 2 === 0 ? "#8C6A4A" : "#D3C0A6"}
+                    fill={index % 2 === 0 ? "#e98925" : "#D3C0A6"}
                   />
                 ))}
               </BarChart>

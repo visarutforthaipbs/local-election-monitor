@@ -6,8 +6,8 @@
      you can conditionally apply width in media queries below. */
   width: 100%;
   padding: 1rem;
-  background-color: #1bb2b5; /* teal background */
-  color: #5a4e40; /* brown text for contrast */
+  background-color: #1bb584; /* teal background */
+  color: #e98925; /* brown text for contrast */
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -31,11 +31,33 @@
   text-decoration: none; /* remove link underline if used as a link */
 }
 
+.logo-container-2 {
+  display: flex; /* Align logos in a row */
+  justify-content: center; /* Center align the logos */
+  align-items: center; /* Vertically center */
+  gap: 10px; /* Space between logos */
+  margin-top: 10px;
+}
+
+.logo-2 {
+  width: auto; /* Adjust the size of each logo */
+  height: 45px; /* Maintain aspect ratio */
+}
+
 .sidebar-logo {
   width: 40%;
   height: auto;
   margin-bottom: 0.5rem;
   animation: fadeIn 1.5s ease-in-out;
+
+  .logo {
+    width: 80px; /* Adjust as needed */
+    height: auto;
+  }
+  .logo-1 {
+    width: 20px; /* Adjust as needed */
+    height: auto;
+  }
 }
 
 .slogan {
@@ -82,7 +104,7 @@
   font-weight: 500;
   background-color: #e0e0e0;
   transition: background-color 0.3s ease;
-  color: #5a4e40;
+  color: #1bb584;
 }
 
 .tab:hover {
@@ -90,7 +112,7 @@
 }
 
 .tab.active {
-  background-color: #8c6a4a;
+  background-color: #e98925;
   color: #fff;
 }
 
@@ -130,7 +152,7 @@
 /* Emphasized numbers in budget */
 .budget-amount {
   font-weight: 600; /* a bit bolder */
-  color: #8c6a4a; /* accent color */
+  color: #e98925; /* accent color */
   background-color: #f6f2ed;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
@@ -150,7 +172,7 @@
 
 .chart-heading {
   font-size: 1.4rem;
-  color: #8c6a4a;
+  color: #e98925;
   margin-bottom: 1rem;
   font-weight: 600;
 }
@@ -168,8 +190,12 @@
 
 .election-count {
   font-weight: bold;
-  color: #895327;
+  color: #e98925;
   margin-left: 0.3rem;
+  background-color: #f6f2ed;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
 }
 
 /* ----------------------------
@@ -177,10 +203,11 @@
 ---------------------------- */
 .data-source {
   font-size: 0.9rem;
-  color: #5a4e40;
+  color: #e98925;
   margin-top: 1rem;
   text-align: center;
   font-style: italic;
+  font-weight: 00;
 }
 
 .data-source a {
