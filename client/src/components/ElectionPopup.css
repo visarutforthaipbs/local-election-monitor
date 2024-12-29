@@ -83,7 +83,7 @@
 }
 
 .toggle-header:hover::after {
-  content: "รวมข้อมูลโดย Rocket Media Lab";
+  content: "รวมข้อมูลโดย The Active / ไทยพีบีเอส";
   position: absolute;
   top: 120%;
   left: 0;
