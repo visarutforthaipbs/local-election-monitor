@@ -25,6 +25,8 @@ const formatNumber = (number) => {
     return (number / 1000000000).toFixed(1) + " พันล้าน";
   } else if (number >= 1000000) {
     return (number / 1000000).toFixed(1) + " ล้าน";
+  } else if (number >= 100000) {
+    return (number / 100000).toFixed(1) + " แสน";
   } else if (number >= 1000) {
     return (number / 1000).toFixed(1) + " พัน";
   } else {
@@ -75,7 +77,7 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           <h3 className="card-heading">สถานะการเลือกตั้งอบจ.ในปัจจุบัน</h3>
           <p className="card-text">
             ✅ จังหวัดที่เลือกตั้งแล้ว:{" "}
-            <span className="election-count">25/77</span>
+            <span className="election-count">25/76</span>
           </p>
           <p className="card-text">
             ⏳ จังหวัดที่กำลังจัดเลือกตั้ง:{" "}
