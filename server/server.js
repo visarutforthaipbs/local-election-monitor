@@ -184,27 +184,23 @@ app.get("/api/articles/:province", async (req, res) => {
   const province = req.params.province;
 
   try {
-    console.log("Incoming province from URL:", province);
-
     const response = await notion.databases.query({
       database_id: process.env.NOTION_DATABASE_ID,
       filter: {
-        property: "Province", // Must match your Notion property name EXACTLY
+        property: "Province",
         select: {
-          equals: province, // The select option in Notion must match this string
+          equals: province,
         },
       },
     });
 
-    console.log("Notion response count:", response.results.length);
-
-    // Log raw results for debugging (optional)
-    // console.log("Notion raw results:", JSON.stringify(response.results, null, 2));
-
-    // Map the response to extract required fields
     const articles = response.results.map((result) => {
       return {
-        title: result.properties?.Title?.title?.[0]?.plain_text || "Untitled",
+        // Now we use ["article-title"] to match the renamed column
+        // and assume it's a rich_text property:
+        title:
+          result.properties?.["article-title"]?.rich_text?.[0]?.plain_text ||
+          "Untitled",
         summary:
           result.properties?.Summary?.rich_text?.[0]?.plain_text ||
           "No summary available",
@@ -212,8 +208,6 @@ app.get("/api/articles/:province", async (req, res) => {
         thumbnail: result.properties?.Thumbnail?.url || "",
       };
     });
-
-    console.log("Mapped articles:", articles);
 
     res.status(200).json(articles);
   } catch (error) {
