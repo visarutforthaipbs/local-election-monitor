@@ -1,26 +1,35 @@
-// Import required libraries
+// server.js
+
+// 1. Import required libraries
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const axios = require("axios");
+const { Client } = require("@notionhq/client"); // Notion SDK
 
 dotenv.config();
 
 const app = express();
+
+// 2. Environment and config
 const PORT = process.env.PORT || 5005;
 const PROVINCE_API_URL = "https://localbudgeting.actai.co/data/2567/pao-";
 
-app.use(cors());
+// 3. Initialize Notion client
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+
+// 4. Middleware
+app.use(cors()); // Allows requests from any origin. Restrict if needed.
 app.use(express.json());
 
-// MongoDB setup
+// 5. Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB:", err.message));
 
-// Schemas and Models
+// 6. Define Schemas & Models
 const ElectionSchema = new mongoose.Schema({
   province: { type: String, required: true },
   electionDate: { type: String },
@@ -30,6 +39,7 @@ const ElectionSchema = new mongoose.Schema({
       party: { type: String },
       votes: { type: Number },
       percentage: { type: Number },
+      imageUrl: { type: String },
     },
   ],
   totalVotes: { type: Number },
@@ -44,20 +54,21 @@ const FeedbackSchema = new mongoose.Schema({
   province: { type: String, required: true },
   name: { type: String, default: "Anonymous" },
   feedback: { type: String, required: true },
-  userNeeds: [{ type: String }], // New user needs field
+  userNeeds: [{ type: String }],
   timestamp: { type: Date, default: Date.now },
 });
 
 const Election = mongoose.model("Election", ElectionSchema, "elections");
 const Feedback = mongoose.model("Feedback", FeedbackSchema, "feedbacks");
 
-// Routes
+// 7. Routes
 
-// Budget API endpoint
+// 7A. Budget API Endpoint
 app.get("/api/budget/:province", async (req, res) => {
   try {
     const provinceName = req.params.province;
     const url = `${PROVINCE_API_URL}${encodeURIComponent(provinceName)}.json`;
+
     const response = await axios.get(url);
     res.json(response.data);
   } catch (error) {
@@ -69,12 +80,13 @@ app.get("/api/budget/:province", async (req, res) => {
   }
 });
 
-// Elections API endpoints
+// 7B. Elections API
 app.get("/api/elections", async (req, res) => {
   try {
     const elections = await Election.find();
     res.json(elections);
   } catch (err) {
+    console.error("Error fetching elections:", err.message);
     res.status(500).json({ error: "Failed to fetch elections data" });
   }
 });
@@ -87,11 +99,12 @@ app.get("/api/elections/:province", async (req, res) => {
     }
     res.json(election);
   } catch (err) {
+    console.error("Error fetching single election:", err.message);
     res.status(500).json({ error: "Failed to fetch province data" });
   }
 });
 
-// Feedback API endpoints
+// 7C. Feedback API Endpoints
 
 // Submit feedback
 app.post("/api/feedback", async (req, res) => {
@@ -117,7 +130,7 @@ app.get("/api/feedback/:province", async (req, res) => {
   }
 });
 
-// NEW ROUTES: User Needs Collection and Aggregation
+// 7D. User Needs (for Word Cloud)
 
 // Submit user needs
 app.post("/api/user-needs", async (req, res) => {
@@ -166,7 +179,50 @@ app.get("/api/user-needs/:province", async (req, res) => {
   }
 });
 
-// Start the server
+// 7E. Articles from Notion
+app.get("/api/articles/:province", async (req, res) => {
+  const province = req.params.province;
+
+  try {
+    console.log("Incoming province from URL:", province);
+
+    const response = await notion.databases.query({
+      database_id: process.env.NOTION_DATABASE_ID,
+      filter: {
+        property: "Province", // Must match your Notion property name EXACTLY
+        select: {
+          equals: province, // The select option in Notion must match this string
+        },
+      },
+    });
+
+    console.log("Notion response count:", response.results.length);
+
+    // Log raw results for debugging (optional)
+    // console.log("Notion raw results:", JSON.stringify(response.results, null, 2));
+
+    // Map the response to extract required fields
+    const articles = response.results.map((result) => {
+      return {
+        title: result.properties?.Title?.title?.[0]?.plain_text || "Untitled",
+        summary:
+          result.properties?.Summary?.rich_text?.[0]?.plain_text ||
+          "No summary available",
+        url: result.properties?.URL?.url || "#",
+        thumbnail: result.properties?.Thumbnail?.url || "",
+      };
+    });
+
+    console.log("Mapped articles:", articles);
+
+    res.status(200).json(articles);
+  } catch (error) {
+    console.error("Error fetching articles from Notion:", error.message);
+    res.status(500).json({ error: "Failed to fetch articles" });
+  }
+});
+
+// 8. Start the Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
