@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -16,35 +16,60 @@ import "./BudgetSidebar.css";
 import UserNeedsWordCloud from "./UserNeedsWordCloud";
 import logoGif from "../assets/logo03.gif";
 
-// Helper function to format numbers
 const formatNumber = (number) => {
   if (number === undefined || number === null || isNaN(number)) {
     return "N/A";
   }
-  if (number >= 1000000000) {
-    return (number / 1000000000).toFixed(1) + " พันล้าน";
-  } else if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + " ล้าน";
-  } else if (number >= 100000) {
-    return (number / 100000).toFixed(1) + " แสน";
-  } else if (number >= 1000) {
-    return (number / 1000).toFixed(1) + " พัน";
+  if (number >= 1_000_000_000) {
+    return (number / 1_000_000_000).toFixed(1) + " พันล้าน";
+  } else if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(1) + " ล้าน";
+  } else if (number >= 100_000) {
+    return (number / 100_000).toFixed(1) + " แสน";
+  } else if (number >= 1_000) {
+    return (number / 1_000).toFixed(1) + " พัน";
   } else {
     return number.toLocaleString();
   }
 };
 
 const BudgetSidebar = ({ budgetData, electionProgress }) => {
-  const [activeTab, setActiveTab] = useState("budget"); // State for tabs
+  const [activeTab, setActiveTab] = useState("budget");
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Prepare Pie chart data
+  // Fetch articles when "articles" tab is active
+  useEffect(() => {
+    if (activeTab === "articles" && budgetData?.pao?.name) {
+      setLoading(true);
+      setError(null);
+      fetch(
+        `https://local-election-monitor.onrender.com/api/articles/${encodeURIComponent(
+          budgetData.pao.name
+        )}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setArticles(data);
+        })
+        .catch((err) => {
+          console.error("Error fetching articles:", err);
+          setError("Failed to fetch articles.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [activeTab, budgetData]);
+
+  // Prepare data for Pie and Bar charts
   const chartData =
     budgetData?.groupedByArea?.map((area) => ({
       name: area.area,
       total: parseFloat(area.total),
     })) || [];
 
-  // Prepare Stacked Bar chart data
   const stackedChartData =
     budgetData?.groupedByArea?.map((area) => {
       const plans = Object.fromEntries(
@@ -56,13 +81,16 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
   // Collect plan names for Bar chart
   const planNames = Array.from(
     new Set(
-      budgetData?.groupedByArea.flatMap((area) =>
+      budgetData?.groupedByArea?.flatMap((area) =>
         area.plans.map((plan) => plan.plan)
       )
     )
   );
 
-  // Show only election progress when no province is selected
+  // ========================
+  // SHOW ONLY ELECTION DATA
+  // WHEN NO PROVINCE IS SELECTED
+  // ========================
   if (!budgetData) {
     return (
       <div className="sidebar">
@@ -76,14 +104,15 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
         <div className="election-progress-card">
           <h3 className="card-heading">สถานะการเลือกตั้งอบจ.ในปัจจุบัน</h3>
           <p className="card-text">
-            ✅ จังหวัดที่เลือกตั้งแล้ว{" "}
+            ✅ จังหวัดที่เลือกตั้งแล้ว{""}
             <span className="election-count">29 จังหวัด</span>
           </p>
           <p className="card-text">
             ⏳ จังหวัดที่จะเลือกตั้งในวันที่ 1 ก.พ.{" "}
-            <span className="election-count"> 47 จังหวัด</span>
+            <span className="election-count">47 จังหวัด</span>
           </p>
         </div>
+
         <div className="separator-line"></div>
         <div className="logo-container-2">
           <img src="./3.png" alt="pi-logo" className="logo-2" />
@@ -94,11 +123,15 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
     );
   }
 
+  // ========================
+  // WHEN BUDGET DATA EXISTS
+  // ========================
   return (
     <div className="sidebar">
+      {/* Logo */}
       <div className="logo-container">
         <img src={logoGif} alt="Logo" className="sidebar-logo" />
-        <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>{" "}
+        <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
         <div className="separator-line"></div>
       </div>
 
@@ -115,6 +148,12 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           onClick={() => setActiveTab("needs")}
         >
           ความต้องการของประชาชน
+        </button>
+        <button
+          className={`tab ${activeTab === "articles" ? "active" : ""}`}
+          onClick={() => setActiveTab("articles")}
+        >
+          รู้จักจังหวัดให้มากขึ้น
         </button>
       </div>
 
@@ -133,21 +172,18 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
               {budgetData.pao?.chiefExecutives?.[0]?.name || "N/A"}
             </span>
           </p>
-
           <p className="card-text">
             ระยะเวลารับตำแหน่ง:{" "}
             <span className="budget-amount">
               {budgetData.pao?.chiefExecutives?.[0]?.inOffice || "N/A"}
             </span>
           </p>
-
           <p className="card-text-budget">
-            งบประมาณทั้งหมด :{" "}
+            งบประมาณทั้งหมด:{" "}
             <span className="budget-amount">
               {formatNumber(budgetData.total)} บาท
             </span>
           </p>
-
           <p className="card-text">
             ประชากร:{" "}
             <span className="budget-amount">
@@ -168,7 +204,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                   cy="50%"
                   outerRadius="80%"
                   fill="#8C6A4A"
-                  // Format the slice labels on the chart
                   label={(entry) => formatNumber(entry.value)}
                 >
                   {chartData.map((entry, index) => (
@@ -178,7 +213,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                     />
                   ))}
                 </Pie>
-                {/* Format the hover tooltip too */}
                 <Tooltip
                   formatter={(value, name) => [formatNumber(value), name]}
                 />
@@ -204,10 +238,9 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                       return (value / 1_000).toFixed(1) + "พัน";
                     return value;
                   }}
-                  width={60} // give a bit more space
+                  width={60}
                   tick={{ fontSize: 12 }}
                 />
-                {/* Format numbers inside the tooltip as well */}
                 <Tooltip
                   formatter={(value, name) => [formatNumber(value), name]}
                 />
@@ -223,7 +256,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
             </ResponsiveContainer>
           </div>
 
-          {/* Data Source or Disclaimer */}
           <p className="data-source">
             ที่มาข้อมูล:{" "}
             <a
@@ -235,8 +267,42 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
             </a>
           </p>
         </div>
-      ) : (
+      ) : activeTab === "needs" ? (
         <UserNeedsWordCloud province={budgetData?.pao?.name} />
+      ) : (
+        <div className="card">
+          {loading && <p>กำลังโหลดเนื้อหา...</p>}
+          {error && <p className="error">{error}</p>}
+
+          {!loading && !error && articles.length === 0 && (
+            <p>ไม่มีบทความของจังหวัดนี้</p>
+          )}
+
+          {!loading && !error && articles.length > 0 && (
+            <div className="articles-tab">
+              {articles.map((article, index) => (
+                <div key={index} className="article-item">
+                  <img
+                    src={article.thumbnail}
+                    alt={article.title} // <-- Updated here
+                    className="article-thumbnail"
+                  />
+                  <div className="article-content">
+                    <h4>{article.title}</h4>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="article-link"
+                    >
+                      อ่านเพิ่มเติม
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       <div className="separator"></div>

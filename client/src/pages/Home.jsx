@@ -8,7 +8,7 @@ import BudgetSidebar from "../components/BudgetSidebar";
 import MapView from "../components/MapView";
 import ElectionPopup from "../components/ElectionPopup";
 import Legend from "../components/Legend";
-import Spinner from "../components/Spinner"; // <-- import our spinner
+import Spinner from "../components/Spinner"; // Our spinner for loading
 import provinceNameMap from "../province_name_map.json";
 import "./Home.css";
 
@@ -23,22 +23,22 @@ function Home() {
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedElectionData, setSelectedElectionData] = useState(null);
+
+  // Controls when we show the Onboarding Tour
   const [isTourReady, setIsTourReady] = useState(false);
 
-  // NEW: loading state to show spinner while data is fetched
+  // Loading state (Spinner) while data is fetched
   const [loading, setLoading] = useState(true);
 
-  // -----------------------
-  // 2. Election Progress
-  // -----------------------
+  // Dynamic election progress data
   const [electionProgress, setElectionProgress] = useState({
-    completed: 23,
-    upcoming: 2,
-    nextProvince: ["อุตรดิตถ์", "อุบลราชธานี"],
+    completed: 0,
+    upcoming: 0,
+    nextProvince: [],
   });
 
   // -----------------------
-  // 3. isMobile Detection
+  // 2. Detect Mobile
   // -----------------------
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -51,13 +51,14 @@ function Home() {
   }, []);
 
   // -----------------------
-  // 4. Fetch ELECTIONS Data
+  // 3. Fetch ELECTIONS Data
   // -----------------------
   useEffect(() => {
     setLoading(true); // Start loading
     axios
       .get("https://local-election-monitor.onrender.com/api/elections")
       .then((response) => {
+        // Store the raw elections data
         setElections(response.data);
 
         // Calculate election progress
@@ -74,6 +75,7 @@ function Home() {
         setElectionProgress({
           completed,
           upcoming,
+          // If no upcoming provinces, show ["N/A"] as a fallback
           nextProvince: nextProvinces.length > 0 ? nextProvinces : ["N/A"],
         });
       })
@@ -81,15 +83,16 @@ function Home() {
         console.error("Error fetching elections data:", error);
       })
       .finally(() => {
-        // Stop loading once we have election data
+        // Once the election data is fetched, we can end loading
         setLoading(false);
       });
   }, []);
 
   // -----------------------
-  // 5. Prepare the Tour
+  // 4. Onboarding Tour Delay
   // -----------------------
   useEffect(() => {
+    // Slight delay to ensure the page is rendered before the tour starts
     const timeout = setTimeout(() => {
       setIsTourReady(true);
     }, 500);
@@ -97,30 +100,31 @@ function Home() {
   }, []);
 
   // -----------------------
-  // 6. Province Options
+  // 5. Province Search Options
   // -----------------------
   const provinceOptions = Object.entries(provinceNameMap).map(
-    ([key, value]) => ({
-      value: key,
-      label: value,
+    ([englishName, thaiName]) => ({
+      value: englishName, // e.g. "Bangkok"
+      label: thaiName, // e.g. "กรุงเทพมหานคร"
     })
   );
 
   // -----------------------
-  // 7. Handlers
+  // 6. Handlers
   // -----------------------
   const handleProvinceClick = async (provinceName) => {
+    // Convert the English province name from the GeoJSON to Thai
     const thaiName = provinceNameMap[provinceName];
     if (!thaiName) return;
 
-    // Set selected election data
+    // Set selected election data from the loaded elections
     const provinceElection = elections.find((e) => e.province === thaiName);
     if (provinceElection) {
       setSelectedElectionData(provinceElection);
       setIsPopupVisible(true);
     }
 
-    // Fetch budget data
+    // Fetch budget data for the clicked province
     try {
       const response = await axios.get(
         `https://local-election-monitor.onrender.com/api/budget/${encodeURIComponent(
@@ -136,13 +140,14 @@ function Home() {
 
   const getProvinceFillColor = (provinceName) => {
     const thaiName = provinceNameMap[provinceName];
+    // If we have an election entry for this province, fill color #1BB2B5, otherwise #D0D0D0
     return elections.find((e) => e.province === thaiName)
       ? "#1BB2B5"
       : "#D0D0D0";
   };
 
   // -----------------------
-  // 8. Onboarding Tour Steps
+  // 7. Onboarding Tour Steps
   // -----------------------
   const steps = [
     {
@@ -161,19 +166,19 @@ function Home() {
   ];
 
   // -----------------------
-  // 9. Render
+  // 8. Render
   // -----------------------
 
-  // If still loading or tour not ready, show spinner (or blank screen)
+  // Show spinner until data is fetched AND tour is ready
   if (loading || !isTourReady) {
     return <Spinner />;
   }
 
-  // Once loading is done *and* tour is ready, render the main content
+  // Once loading is done and tour is ready, render the main content
   return (
     <TourProvider steps={steps}>
       <div className="home-container-full">
-        {/* Search Bar */}
+        {/* Province Search Bar */}
         <div className="search-bar">
           <Select
             options={provinceOptions}
@@ -185,12 +190,10 @@ function Home() {
           />
         </div>
 
-        {/* Main Content */}
         <div className="home-content">
           {/* 
-            Conditionally render the sidebar only if NOT mobile.
-            This unmounts the sidebar on mobile, preventing conflicts
-            with MapView’s collapsible WordCloud.
+            Conditionally render the sidebar on desktop only.
+            Remove !isMobile && if you also want it on mobile.
           */}
           {!isMobile && (
             <BudgetSidebar
