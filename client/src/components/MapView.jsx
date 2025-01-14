@@ -118,10 +118,10 @@ const MapView = ({ geoUrl, handleProvinceClick, getProvinceFillColor }) => {
         projection="geoMercator"
         projectionConfig={{
           scale: isMobile ? 3500 : 1800,
-          center: isMobile ? [101, 11.5] : [100, 13.5],
+          center: isMobile ? [101, 11.5] : [106, 11.5],
         }}
         style={{
-          width: "100%",
+          width: "180%",
           height: isMobile ? "105vh" : "100vh",
         }}
       >
