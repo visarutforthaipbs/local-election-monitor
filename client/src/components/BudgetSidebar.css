@@ -335,3 +335,49 @@
     font-size: 1rem;
   }
 }
+
+/* ----------------------------
+  insight
+---------------------------- */
+.insights-card {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.insights-heading {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #5a4e40;
+  margin-bottom: 12px;
+}
+
+.insights-content {
+  font-size: 0.9rem;
+  color: #5a4e40;
+}
+
+.insight-item {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.insight-item strong {
+  font-weight: light;
+  color: #8c6a4a;
+}
+
+.toggle-button {
+  background-color: #fafafa;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 16px;
+}

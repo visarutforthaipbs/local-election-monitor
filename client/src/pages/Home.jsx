@@ -199,6 +199,8 @@ function Home() {
             <BudgetSidebar
               budgetData={budgetData}
               electionProgress={electionProgress}
+              csvPath="/data/province_budget_summary_67.csv"
+              selectedProvince={selectedProvince}
             />
           )}
 

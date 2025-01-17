@@ -33,11 +33,13 @@ const formatNumber = (number) => {
   }
 };
 
-const BudgetSidebar = ({ budgetData, electionProgress }) => {
+const BudgetSidebar = ({ budgetData, electionProgress, csvPath }) => {
   const [activeTab, setActiveTab] = useState("budget");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showInsights, setShowInsights] = useState(false);
+  const [provinceInsights, setProvinceInsights] = useState(null);
 
   // Fetch articles when "articles" tab is active
   useEffect(() => {
@@ -63,6 +65,42 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
     }
   }, [activeTab, budgetData]);
 
+  // Load insights data from the CSV
+  useEffect(() => {
+    if (csvPath && budgetData?.pao?.name) {
+      fetch(csvPath)
+        .then((response) => response.text())
+        .then((text) => {
+          const rows = text.split("\n").map((row) => row.split(","));
+          const headers = rows[0]; // Extract column names
+          const data = rows.slice(1); // Extract data rows
+
+          // Find the row matching the selected province
+          const provinceData = data.find(
+            (row) => row[headers.indexOf("Province")] === budgetData.pao.name
+          );
+
+          if (provinceData) {
+            setProvinceInsights({
+              perCapitaBudget:
+                provinceData[headers.indexOf("Per Capita Budget")] || "N/A",
+              topSpendingArea:
+                provinceData[headers.indexOf("Top Spending Area")] || "N/A",
+              topSpendingType:
+                provinceData[headers.indexOf("Top Spending Type")] || "N/A",
+              highestIncomeSource:
+                provinceData[headers.indexOf("Highest Income Source")] || "N/A",
+              summaryInsight:
+                provinceData[headers.indexOf("Summary Insight")] || "N/A",
+            });
+          } else {
+            setProvinceInsights(null);
+          }
+        })
+        .catch((error) => console.error("Error loading insights data:", error));
+    }
+  }, [csvPath, budgetData]);
+
   // Prepare data for Pie and Bar charts
   const chartData =
     budgetData?.groupedByArea?.map((area) => ({
@@ -78,7 +116,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
       return { area: area.area, ...plans };
     }) || [];
 
-  // Collect plan names for Bar chart
   const planNames = Array.from(
     new Set(
       budgetData?.groupedByArea?.flatMap((area) =>
@@ -87,10 +124,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
     )
   );
 
-  // ========================
-  // SHOW ONLY ELECTION DATA
-  // WHEN NO PROVINCE IS SELECTED
-  // ========================
   if (!budgetData) {
     return (
       <div className="sidebar">
@@ -99,12 +132,10 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
           <div className="separator-line"></div>
         </a>
-
-        {/* Election Progress */}
         <div className="election-progress-card">
           <h3 className="card-heading">สถานะการเลือกตั้งอบจ.ในปัจจุบัน</h3>
           <p className="card-text">
-            ✅ จังหวัดที่เลือกตั้งแล้ว{""}
+            ✅ จังหวัดที่เลือกตั้งแล้ว{" "}
             <span className="election-count">29 จังหวัด</span>
           </p>
           <p className="card-text">
@@ -112,7 +143,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
             <span className="election-count">47 จังหวัด</span>
           </p>
         </div>
-
         <div className="separator-line"></div>
         <div className="logo-container-2">
           <img src="./3.png" alt="pi-logo" className="logo-2" />
@@ -123,19 +153,14 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
     );
   }
 
-  // ========================
-  // WHEN BUDGET DATA EXISTS
-  // ========================
   return (
     <div className="sidebar">
-      {/* Logo */}
       <div className="logo-container">
         <img src={logoGif} alt="Logo" className="sidebar-logo" />
         <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
         <div className="separator-line"></div>
       </div>
 
-      {/* Tabs */}
       <div className="tabs">
         <button
           className={`tab ${activeTab === "budget" ? "active" : ""}`}
@@ -157,7 +182,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
         </button>
       </div>
 
-      {/* Budget Tab */}
       {activeTab === "budget" && budgetData ? (
         <div className="card">
           <h3 className="card-heading">
@@ -191,6 +215,47 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
             </span>
           </p>
 
+          {/* Toggle for Insights */}
+          <button
+            onClick={() => setShowInsights((prev) => !prev)}
+            className="toggle-button"
+          >
+            {showInsights
+              ? "🎯 ซ่อนข้อมูลเชิงลึก"
+              : "🎯 Key Insight  การใช้งบประมาณ"}
+          </button>
+
+          {/* Insights Section */}
+          {showInsights && provinceInsights && (
+            <div className="insights-card">
+              <div className="insights-content">
+                <p className="insight-item">
+                  <strong>งบประมาณต่อหัว:</strong>{" "}
+                  {formatNumber(provinceInsights.perCapitaBudget)} บาท{" "}
+                </p>
+                <p className="insight-item">
+                  <strong>พื้นที่ใช้จ่ายมากที่สุด:</strong>{" "}
+                  {provinceInsights.topSpendingArea}
+                </p>
+                <p className="insight-item">
+                  <strong>ประเภทการใช้จ่ายสูงสุด:</strong>{" "}
+                  {provinceInsights.topSpendingType}
+                </p>
+                <p className="insight-item">
+                  <strong>แหล่งรายได้สูงสุด:</strong>{" "}
+                  {provinceInsights.highestIncomeSource}
+                </p>
+                <p className="insight-item">
+                  <strong>สรุปเชิงลึก:</strong>{" "}
+                  {provinceInsights.summaryInsight}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {showInsights && !provinceInsights && (
+            <p>ไม่มีข้อมูลเชิงลึกสำหรับจังหวัดนี้</p>
+          )}
           {/* Pie Chart */}
           <div className="chart-container">
             <h4 className="chart-heading">การใช้งบประมาณตามประเภท</h4>
@@ -255,17 +320,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          <p className="data-source">
-            ที่มาข้อมูล:{" "}
-            <a
-              href="https://localbudgeting.actai.co/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              องค์กรต่อต้านคอร์รัปชัน (ประเทศไทย)
-            </a>
-          </p>
         </div>
       ) : activeTab === "needs" ? (
         <UserNeedsWordCloud province={budgetData?.pao?.name} />
@@ -284,7 +338,7 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
                 <div key={index} className="article-item">
                   <img
                     src={article.thumbnail}
-                    alt={article.title} // <-- Updated here
+                    alt={article.title}
                     className="article-thumbnail"
                   />
                   <div className="article-content">
@@ -304,8 +358,6 @@ const BudgetSidebar = ({ budgetData, electionProgress }) => {
           )}
         </div>
       )}
-
-      <div className="separator"></div>
     </div>
   );
 };
