@@ -320,6 +320,16 @@ const BudgetSidebar = ({ budgetData, electionProgress, csvPath }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <p className="data-source">
+            ที่มาข้อมูล:{" "}
+            <a
+              href="https://localbudgeting.actai.co/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              องค์กรต่อต้านคอร์รัปชัน (ประเทศไทย)
+            </a>
+          </p>
         </div>
       ) : activeTab === "needs" ? (
         <UserNeedsWordCloud province={budgetData?.pao?.name} />
