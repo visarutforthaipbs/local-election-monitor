@@ -129,7 +129,7 @@ const BudgetSidebar = ({ budgetData, electionProgress, csvPath }) => {
       <div className="sidebar">
         <a href="/" className="logo-container">
           <img src={logoGif} alt="Logo" className="sidebar-logo" />
-          <p className="slogan">จับตาเลือกนายกอบจ. 2567-2568</p>
+          <p className="slogan">บ้านฉันเอาแบบนี้ : เลือกตั้งอบจ.2567-2568</p>
           <div className="separator-line"></div>
         </a>
         <div className="election-progress-card">
